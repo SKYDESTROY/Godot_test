@@ -1,24 +1,45 @@
-[gd_scene load_steps=2 format=3 uid="uid://nqaqxhey0yoy"]
+[gd_scene load_steps=6 format=3 uid="uid://cxkoy5v02xjkp"]
 
-[ext_resource type="Script" path="res://main.gd" id="1_01xll"]
+[ext_resource type="Script" uid="uid://ce83h6db1lxy4" path="res://main.gd" id="1_ig7tw"]
+[ext_resource type="PackedScene" uid="uid://bn5kjamyp271a" path="res://enemy.tscn" id="2_0xm2m"]
+[ext_resource type="PackedScene" uid="uid://w4dnugkccplm" path="res://player.tscn" id="3_h2yge"]
+[ext_resource type="PackedScene" uid="uid://c04b8i2afg6d8" path="res://hud.tscn" id="4_1bvp3"]
+
+[sub_resource type="Curve2D" id="Curve2D_0xm2m"]
+_data = {
+"points": PackedVector2Array(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 480, -0.009800183, 0, 0, 0, 0, 480.0147, 719.9902)
+}
+point_count = 3
 
 [node name="Main" type="Node"]
-script = ExtResource("1_01xll")
+script = ExtResource("1_ig7tw")
+enemyscene = ExtResource("2_0xm2m")
 
-[node name="Label" type="Label" parent="."]
-anchors_preset = 8
-anchor_left = 0.5
-anchor_top = 0.5
-anchor_right = 0.5
-anchor_bottom = 0.5
-offset_left = -257.0
-offset_top = -130.0
-offset_right = 257.0
-offset_bottom = 130.0
-grow_horizontal = 2
-grow_vertical = 2
-size_flags_horizontal = 4
-theme_override_font_sizes/font_size = 56
-text = "label"
-horizontal_alignment = 1
-vertical_alignment = 1
+[node name="enemyspawntimer" type="Timer" parent="."]
+wait_time = 0.5
+
+[node name="scoretimer" type="Timer" parent="."]
+
+[node name="starttimer" type="Timer" parent="."]
+wait_time = 2.0
+one_shot = true
+
+[node name="playposition" type="Marker2D" parent="."]
+position = Vector2(240, 450)
+
+[node name="enemypath" type="Path2D" parent="."]
+rotation = 2.0417046e-05
+curve = SubResource("Curve2D_0xm2m")
+
+[node name="enemyspawnlocation" type="PathFollow2D" parent="enemypath"]
+rotation = -2.0417046e-05
+
+[node name="player" parent="." instance=ExtResource("3_h2yge")]
+
+[node name="HUD" parent="." instance=ExtResource("4_1bvp3")]
+
+[connection signal="timeout" from="enemyspawntimer" to="." method="_on_enemyspowntimer_timeout"]
+[connection signal="timeout" from="scoretimer" to="." method="_on_scoretimer_timeout"]
+[connection signal="timeout" from="starttimer" to="." method="_on_starttimer_timeout"]
+[connection signal="hit" from="player" to="." method="gameover"]
+[connection signal="startgame" from="HUD" to="." method="newgame"]

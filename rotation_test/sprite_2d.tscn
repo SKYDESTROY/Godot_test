@@ -1,0 +1,24 @@
+[gd_scene load_steps=3 format=3 uid="uid://bu7g5awp74ub5"]
+
+[ext_resource type="Texture2D" uid="uid://bohv4553a48bs" path="res://rotation_test/icon.svg" id="1_mehiu"]
+[ext_resource type="Script" uid="uid://b43dkj1d72p54" path="res://rotation_test/sprite_2d.gd" id="2_lt4yx"]
+
+[node name="Node2D" type="Node2D"]
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+position = Vector2(571, 334)
+texture = ExtResource("1_mehiu")
+script = ExtResource("2_lt4yx")
+
+[node name="Button" type="Button" parent="."]
+offset_left = 104.0
+offset_top = 46.0
+offset_right = 254.0
+offset_bottom = 138.0
+text = "button"
+
+[node name="Timer" type="Timer" parent="."]
+autostart = true
+
+[connection signal="pressed" from="Button" to="Sprite2D" method="_on_button_pressed"]
+[connection signal="timeout" from="Timer" to="Sprite2D" method="_on_timer_timeout"]

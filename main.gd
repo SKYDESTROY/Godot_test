@@ -1,14 +1,41 @@
 extends Node
 
-@export var health :=100
-# Called when the node enters the scene tree for the first time.
-func _ready() -> void:
-	print("hello,world")
-	$Label.text="hello"
-	$Label.modulate=Color.GREEN
-# Called every frame. 'delta' is the elapsed time since the previous frame.
-func _input(event: InputEvent) -> void:
-	if event.is_action_pressed("myaction"):
-		$Label.modulate=Color.RED
-	if event.is_action_released("myaction"):
-		$Label.modulate=Color.GREEN
+@export var enemyscene : PackedScene
+var score
+
+func _ready():
+	pass
+#接收hit信号
+func gameover():
+	$enemyspawntimer.stop()
+	$scoretimer.stop()
+	$HUD.gameover()
+	
+func newgame():	
+	score = 0
+	$player.start($playposition.position)
+	$starttimer.start()
+	$HUD.updatescore(score)
+	$HUD.showmessage("ready")
+
+func _on_enemyspowntimer_timeout() :
+	var enemy : = enemyscene.instantiate()
+	var enemyspawnlocation = $enemypath/enemyspawnlocation
+	#路径上随机生成
+	enemyspawnlocation.progress_ratio = randf()
+	enemy.position = enemyspawnlocation.position
+	#方向垂直于生成路径
+	var direction = enemyspawnlocation.rotation + PI /2
+	direction += randf_range(-PI/4,PI/4)
+	enemy.rotation = direction
+	#随机速度
+	var velocity = Vector2(randf_range(150.0,250.0),0.0)
+	enemy.linear_velocity = velocity.rotated(direction)
+	add_child(enemy)
+	
+func _on_scoretimer_timeout() -> void:
+	score += 1
+	$HUD.updatescore(score)
+func _on_starttimer_timeout() -> void:
+	$enemyspawntimer.start()
+	$scoretimer.start()
