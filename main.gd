@@ -4,14 +4,16 @@ extends Node
 var score
 
 func _ready():
-	pass
+	$player.start($playposition.position)
 #接收hit信号
 func gameover():
 	$enemyspawntimer.stop()
 	$scoretimer.stop()
 	$HUD.gameover()
-	
+	$backmusic.stop()
+	$gameover.play()
 func newgame():	
+	$backmusic.play()
 	get_tree().call_group("enemy", "queue_free")
 	score = 0
 	$player.start($playposition.position)
