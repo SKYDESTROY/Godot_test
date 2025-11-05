@@ -12,7 +12,7 @@ func gameover():
 	$HUD.gameover()
 	
 func newgame():	
-	get_tree().call_group("mobs", "queue_free")
+	get_tree().call_group("enemy", "queue_free")
 	score = 0
 	$player.start($playposition.position)
 	$starttimer.start()
